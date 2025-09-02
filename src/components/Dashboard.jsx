@@ -71,7 +71,6 @@ const Dashboard = () => {
   const applyFilters = () => {
     let filtered = [...patients];
     
-    // Apply individual field filters
     if (filters.ipNumber) {
       filtered = filtered.filter(patient => 
         patient.ipNumber?.toLowerCase().includes(filters.ipNumber.toLowerCase())
@@ -102,7 +101,6 @@ const Dashboard = () => {
       );
     }
     
-    // Date filters
     if (filters.startDate) {
       filtered = filtered.filter(patient => 
         new Date(patient.registrationDate) >= new Date(filters.startDate)
@@ -174,55 +172,56 @@ const Dashboard = () => {
     document.body.removeChild(link);
   };
 
-  const exportToPDF = () => {
-    const printContent = `
-      <html>
-        <head>
-          <title>Patients Export</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-            th { background-color: #f2f2f2; }
-            h1 { text-align: center; }
-          </style>
-        </head>
-        <body>
-          <h1>Patients List - ${new Date().toLocaleDateString()}</h1>
-          <table>
-            <thead>
+const exportToPDF = () => {
+  const printContent = `
+    <html>
+      <head>
+        <title>Patients Export</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+          th { background-color: #f2f2f2; }
+          h1 { text-align: center; }
+        </style>
+      </head>
+      <body>
+        <h1>Patients List - ${new Date().toLocaleDateString()}</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>IP Number</th>
+              <th>Patient Name</th>
+              <th>Age</th>
+              <th>Place</th>
+              <th>Phone</th>
+              <th>Registration Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filteredPatients.map(patient => `
               <tr>
-                <th>IP Number</th>
-                <th>Patient Name</th>
-                <th>Age</th>
-                <th>Place</th>
-                <th>Phone</th>
-                <th>Registration Date</th>
+                <td>${patient.ipNumber || 'N/A'}</td>
+                <td>${patient.patientName || 'N/A'}</td>
+                <td>${patient.age || 'N/A'}</td>
+                <td>${patient.place || 'N/A'}</td>
+                <td>${patient.phoneNumber || 'N/A'}</td> 
+                <td>${patient.registrationDate ? new Date(patient.registrationDate).toLocaleDateString() : 'N/A'}</td>
               </tr>
-            </thead>
-            <tbody>
-              ${filteredPatients.map(patient => `
-                <tr>
-                  <td>${patient.ipNumber || 'N/A'}</td>
-                  <td>${patient.patientName || 'N/A'}</td>
-                  <td>${patient.age || 'N/A'}</td>
-                  <td>${patient.place || 'N/A'}</td>
-                  <td>${patient.phoneNumber || 'N/A'}}</td>
-                  <td>${patient.registrationDate ? new Date(patient.registrationDate).toLocaleDateString() : 'N/A'}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </body>
-      </html>
-    `;
+            `).join('')}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
 
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
-  };
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(printContent);
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
+};
+
 
   const openPatientDetails = (patient) => {
     setSelectedPatient(patient);
