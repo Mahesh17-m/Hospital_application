@@ -7,13 +7,17 @@ const errorHandler = require('./middleware/errorHandler');
 const patientRoutes = require('./routes/patientRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
 
-
 const app = express();
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-netlify-app.netlify.app', 'https://your-netlify-app.netlify.app'] 
+    : 'http://localhost:5173',
   credentials: true
 }));
+
 connectDB();
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -37,9 +41,11 @@ app.use((req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
-
 module.exports = app;
+
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
