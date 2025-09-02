@@ -10,9 +10,10 @@ const dashboardRoutes = require('./routes/dashboardRoutes');
 const app = express();
 
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://your-netlify-app.netlify.app', 'https://your-netlify-app.netlify.app'] 
-    : 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173', // Local development
+    'https://hospitalmanagementsy.netlify.app' // Your Netlify URL
+  ],
   credentials: true
 }));
 
